@@ -28,5 +28,6 @@ export const theme = {
   BORDER: {
     SM: 5,
     MD: 8,
+    LG: 25,
   },
 };

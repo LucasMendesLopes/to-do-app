@@ -18,24 +18,22 @@ export const Logo = styled.Image`
   height: 32px;
 `;
 
-export const ListContainer = styled.View`
-  flex: 1;
-  background-color: ${theme.COLORS.GRAY_600};
-  padding: 24px;
-`;
-
 export const InputContainer = styled.View`
+  position: absolute;
+  top: 142px;
   flex-direction: row;
   align-items: center;
   gap: 4px;
-  margin-top: -50px;
+  z-index: 1;
+  padding: 0 20px;
 `;
 
-export const Input = styled.TextInput`
+export const Input = styled.TextInput<{ focus: boolean }>`
   flex: 1;
   height: 54px;
   background-color: ${theme.COLORS.GRAY_500};
-  border: 1px solid ${theme.COLORS.GRAY_700};
+  border: 1px solid
+    ${({ focus }) => (focus ? theme.COLORS.PURPLE_DARK : theme.COLORS.GRAY_700)};
   padding: 16px;
   border-radius: ${theme.BORDER.SM}px;
   color: ${theme.COLORS.GRAY_100};
@@ -50,4 +48,16 @@ export const AddButton = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
   border-radius: ${theme.BORDER.SM}px;
+`;
+
+export const ListContainer = styled.View`
+  flex: 1;
+  background-color: ${theme.COLORS.GRAY_600};
+  padding: 59px 24px 0px;
+`;
+
+export const ListHeaderContainer = styled.View`
+  width: 100%;
+  justify-content: space-between;
+  flex-direction: row;
 `;

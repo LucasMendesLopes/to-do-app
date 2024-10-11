@@ -16,7 +16,7 @@ export const ListItem = ({ isChecked, text, onCheckboxChange, handleRemove }: Pr
 
     return (
         <s.Container
-            from={{ opacity: 0, translateY: 100 }}
+            from={{ opacity: 0, translateY: -100 }}
             animate={{
                 opacity: startAnim ? 1 : 0,
                 translateY: 0,

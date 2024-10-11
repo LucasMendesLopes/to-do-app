@@ -2,34 +2,55 @@ import * as s from "./styled"
 import { theme } from "../../theme";
 import { ListCount, ListItem } from "../../components";
 import { useState } from "react";
-import { FlatList, View } from "react-native";
+import { Alert, FlatList, View } from "react-native";
 import { Task } from "../../types/task";
 import { PlusCircle } from "phosphor-react-native";
-
-const initialTasks: Task[] = [
-    { text: "Integer urna interdum massa libero auctor neque turpis turpis semper.", id: 1, isChecked: false },
-    { text: "Integer urna interdum massa libero auctor neque turpis turpis semper.", id: 2, isChecked: false },
-    { text: "Integer urna interdum massa libero auctor neque turpis turpis semper.", id: 3, isChecked: false },
-    { text: "Integer urna interdum massa libero auctor neque turpis turpis semper.", id: 4, isChecked: false },
-    { text: "Integer urna interdum massa libero auctor neque turpis turpis semper.", id: 5, isChecked: false },
-    { text: "Integer urna interdum massa libero auctor neque turpis turpis semper.", id: 6, isChecked: false },
-    { text: "Integer urna interdum massa libero auctor neque turpis turpis semper.", id: 7, isChecked: false },
-    { text: "Integer urna interdum massa libero auctor neque turpis turpis semper.", id: 8, isChecked: false },
-    { text: "Integer urna interdum massa libero auctor neque turpis turpis semper.", id: 9, isChecked: false },
-    { text: "Integer urna interdum massa libero auctor neque turpis turpis semper.", id: 10, isChecked: false },
-    { text: "Integer urna interdum massa libero auctor neque turpis turpis semper.", id: 11, isChecked: false },
-    { text: "Integer urna interdum massa libero auctor neque turpis turpis semper.", id: 12, isChecked: false },
-    { text: "Integer urna interdum massa libero auctor neque turpis turpis semper.", id: 13, isChecked: false },
-    { text: "Integer urna interdum massa libero auctor neque turpis turpis semper.", id: 14, isChecked: false },
-    { text: "Integer urna interdum massa libero auctor neque turpis turpis semper.", id: 15, isChecked: false }
-];
+import { Toast } from "toastify-react-native";
+import * as Crypto from "expo-crypto";
 
 export function Home() {
     const [inputFocus, setInputFocus] = useState(false)
-    const [tasks, setTasks] = useState(initialTasks);
+    const [tasks, setTasks] = useState<Task[]>([]);
+    const [taskText, setTaskText] = useState("");
     const [finalizedTasks, setFinalizedTasks] = useState(0)
 
-    const handleCheckTask = (id: number, isChecked: boolean) => {
+    const handleAddTask = () => {
+        const formatedTaskText = taskText.trim()
+
+        if (formatedTaskText === "") return Toast.info('Digite as informações da tarefa.')
+        if (tasks.some((task) => task.text.trim().toLowerCase() === taskText.trim().toLowerCase())) return Toast.warn('Essa tarefa já existe.')
+
+        const task = { text: formatedTaskText, id: Crypto.randomUUID(), isChecked: false };
+
+        setTasks((prevState) => [...prevState, task])
+        setTaskText("")
+    }
+
+    const handleRemoveTask = (id: string, setStartAnim: (startAnim: boolean) => void) => {
+        Alert.alert('Remover', `Você deseja remover essa tarefa?`, [
+            {
+                text: 'sim',
+                onPress: () => {
+                    setStartAnim(false);
+
+                    setTimeout(() => {
+                        setTasks((prevState) => prevState.filter((task) => task.id !== id));
+
+                        if (tasks.some((task) => task.id === id && task.isChecked)) {
+                            setFinalizedTasks((prevFinalized) => prevFinalized - 1);
+                        }
+                    }, 300);
+                },
+            },
+            {
+                text: 'não',
+                style: 'cancel',
+            },
+        ]);
+    };
+
+
+    const handleCheckTask = (id: string, isChecked: boolean) => {
         setTasks((prevItems) =>
             prevItems.map(item =>
                 item.id === id ? { ...item, isChecked } : item
@@ -52,14 +73,16 @@ export function Home() {
 
             <s.InputContainer>
                 <s.Input
+                    value={taskText}
                     placeholder="Adicione uma nova tarefa"
                     placeholderTextColor={theme.COLORS.GRAY_300}
                     onFocus={() => setInputFocus(true)}
                     onBlur={() => setInputFocus(false)}
                     focus={inputFocus}
+                    onChangeText={(text) => setTaskText(text)}
                 />
 
-                <s.AddButton activeOpacity={0.5}>
+                <s.AddButton activeOpacity={0.5} onPress={handleAddTask}>
                     <PlusCircle size={25} color={theme.COLORS.GRAY_100} />
                 </s.AddButton>
             </s.InputContainer>
@@ -78,6 +101,8 @@ export function Home() {
                             isChecked={item.isChecked}
                             text={item.text}
                             onCheckboxChange={(isChecked) => handleCheckTask(item.id, isChecked)}
+                            handleRemove={(setStartAnim) => handleRemoveTask(item.id, setStartAnim)}
+
                         />
                     }
                     ItemSeparatorComponent={() => <View style={{ marginBottom: 8 }} />}

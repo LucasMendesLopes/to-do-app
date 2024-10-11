@@ -1,7 +1,8 @@
 import styled from "styled-components/native";
 import { theme } from "../../theme";
+import { MotiView } from "moti";
 
-export const Container = styled.View`
+export const Container = styled(MotiView)`
   width: 100%;
   min-height: 64px;
   flex-direction: row;
@@ -17,7 +18,7 @@ export const Container = styled.View`
 
 export const Text = styled.Text<{ isChecked: boolean }>`
   flex: 1;
-  flex-wrap: "wrap";
+  flex-wrap: wrap;
   font-size: ${theme.FONT_SIZE.MD}px;
   color: ${({ isChecked }) =>
     isChecked ? theme.COLORS.GRAY_300 : theme.COLORS.GRAY_100};

@@ -1,10 +1,9 @@
 import styled from "styled-components/native";
-import { StatusBar } from "react-native";
 import { theme } from "../../theme";
+import { MotiSafeAreaView } from "moti";
 
-export const Container = styled.SafeAreaView`
+export const Container = styled(MotiSafeAreaView)`
   flex: 1;
-  margin-top: ${StatusBar.currentHeight}px;
 `;
 
 export const Header = styled.View`

@@ -25,7 +25,15 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-font"
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/Inter_18pt-Regular.ttf",
+            "./assets/fonts/Inter_18pt-Bold.ttf"
+          ]
+        }
+      ]
     ],
     "extra": {
       "eas": {

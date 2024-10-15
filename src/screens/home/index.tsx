@@ -63,7 +63,11 @@ export function Home() {
     };
 
     return (
-        <s.Container>
+        <s.Container
+            from={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 200 }}
+        >
             <s.Header>
                 <s.Logo
                     source={require('../../assets/logo.png')}
@@ -102,7 +106,6 @@ export function Home() {
                             text={item.text}
                             onCheckboxChange={(isChecked) => handleCheckTask(item.id, isChecked)}
                             handleRemove={(setStartAnim) => handleRemoveTask(item.id, setStartAnim)}
-
                         />
                     }
                     ItemSeparatorComponent={() => <View style={{ marginBottom: 8 }} />}
